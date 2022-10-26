@@ -4,30 +4,20 @@ from h2o_wave import Q, main, app, ui
 @app('/calculator')
 async def serve(q: Q):
     answer = ""
-    is_add_clicked = False
 
-    if q.args.add:
-        is_add_clicked = True
-        first = q.args.firstTextbox
-        second = q.args.secondTextbox
-        try:
+    first = q.args.firstTextbox
+    second = q.args.secondTextbox
+    try:
+        if q.args.add:
             answer = int(first) + int(second)
-        except Exception as e:
-            answer = "Enter valid input"
-        finally:
-            pass
-            #todo clear text boxes
-
-    elif q.args.subtract:
-        first = q.args.firstTextbox
-        second = q.args.secondTextbox
-        try:
+        elif q.args.subtract:
             answer = int(first) - int(second)
-        except Exception as e:
-            answer = "Enter valid input"
-        finally:
-            pass
-            #todo clear text boxes
+    except Exception as e:
+        answer = f"Enter valid input {e}"
+    finally:
+        pass
+        # todo clear text boxes
+
 
 
     if not q.client.initialized:
@@ -71,8 +61,5 @@ async def serve(q: Q):
         )
     else:
         q.page['answer'].content = f'Answer is {answer}'
-        print(is_add_clicked)
-        if is_add_clicked:
-            val = q.page['first_value'].textbox.value
 
     await q.page.save()
